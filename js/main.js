@@ -24,6 +24,8 @@ const adSimilarElement = document.querySelector(`.map__pins`);
 const similarElementTemplate = document
   .querySelector(`#pin`)
   .content.querySelector(`.map__pin`);
+const filterFieldset = document.querySelectorAll(`fieldset`);
+const mapPin = document.querySelector(`.map__pin--main`);
 
 const getRandomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
@@ -78,10 +80,34 @@ const renderPins = (pins) => {
   adSimilarElement.appendChild(fragment);
 };
 
+const data = generatePins();
+
+const changeFormState = (state) => {
+  for (let i = 0; i < filterFieldset.length; i++) {
+    filterFieldset[i].setAttribute(`disabled`, state ? `disabled` : ``);
+  }
+};
+
 const init = () => {
-  const data = generatePins();
-  renderPins(data);
-  map.classList.remove(`map--faded`);
+  changeFormState(true);
 };
 
 init();
+
+mapPin.addEventListener(`mousedown`, (evt) => {
+  if (evt.which === 1) {
+    activateWindow();
+  }
+});
+
+mapPin.addEventListener(`keydown`, (evt) => {
+  if (evt.key === `Enter`) {
+    activateWindow();
+  }
+});
+
+const activateWindow = () => {
+  map.classList.remove(`map--faded`);
+  renderPins(data);
+  changeFormState(false);
+};
